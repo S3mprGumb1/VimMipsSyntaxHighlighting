@@ -71,10 +71,24 @@ syn region MIPSLabel
         \ end="$"
         \ contains=MIPSCommenthash
 
+" .data string
+syn region MIPSLabel            
+        \ matchgroup=MIPSConstraint 
+        \ start="\.data\s*"  
+        \ end="$"
+        \ contains=MIPSCommenthash
+
+" .word string
+syn region MIPSLabel            
+        \ matchgroup=MIPSConstraint 
+        \ start="\.word\s*"  
+        \ end="$"
+        \ contains=MIPSCommenthash
+
 " .asciiz strings
 syn region MIPSComment          
         \ matchgroup=MIPSConstraint 
-        \ start="\.asciiz\s" 
+        \ start="\.asciiz*\s" 
         \ end="$"                          
         \ contains=MIPSOperator,MIPSCommenthash
 
