@@ -72,14 +72,14 @@ syn region MIPSLabel
         \ contains=MIPSCommenthash
 
 " .data string
-syn region MIPSLabel            
+syn region MIPSLabel           
         \ matchgroup=MIPSConstraint 
         \ start="\.data\s*"  
         \ end="$"
         \ contains=MIPSCommenthash
 
 " .word string
-syn region MIPSLabel            
+syn region decNumber            
         \ matchgroup=MIPSConstraint 
         \ start="\.word\s*"  
         \ end="$"
@@ -91,6 +91,14 @@ syn region MIPSComment
         \ start="\.asciiz*\s" 
         \ end="$"                          
         \ contains=MIPSOperator,MIPSCommenthash
+
+" .space string
+syn region decNumber
+        \ matchgroup=MIPSConstraint
+        \ start="\.space\s*"
+        \ end="\s"
+        \ end="$"
+        \ contains=decNumber,MIPSCommenthash
 
 
 " Registers 
