@@ -9,16 +9,16 @@ syn case   ignore
 syn match  MIPSOperator          "\\n"
 
 " commas and parens are always white
-syn match  MIPSComment           "[,()]"
+syn match  MIPSBase           "[,()]"
 
 " forces strings after .asciiz marks
-syn region MIPSComment          
+syn region MIPSBase          
         \ start=+"+ 
         \ end=+"+ 
         \ contains=MIPSReg
 
 " allows a TODO statement to be highlighted comments
-syn region MIPSComment	
+syn region MIPSBase	
         \ start="\s*#\s*if\s\+0\+\>" 
         \ end="\s*#\s*endif\>" 
         \ contains=MIPSTodo, MIPSReg
@@ -26,11 +26,11 @@ syn region MIPSComment
 " label at the end of instructions, unless its a number or register
 " kinda janky af bullshit
 syn region MIPSLabel            
-        \ matchgroup=MIPSComment    
+        \ matchgroup=MIPSBase    
         \ start=","          
         \ end="$" 
         \ skip=","                 
-        \ contains=MIPSReg,decNumber,MIPSComment,MIPSCommenthash
+        \ contains=MIPSReg,decNumber,MIPSBase,MIPSComment
 
 " label after j instruction
 syn region MIPSLabel            
@@ -39,7 +39,7 @@ syn region MIPSLabel
         \ matchgroup=NONE 
         \ end="[a-z0-9]\s"
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " label after jal instruction
 syn region MIPSLabel            
@@ -48,57 +48,57 @@ syn region MIPSLabel
         \ matchgroup=NONE 
         \ end="[a-z0-9]\s" 
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .globl string, with label after
 syn region MIPSLabel            
-        \ matchgroup=MIPSConstraint 
+        \ matchgroup=MIPSDeclaration 
         \ start="\.globl\s"  
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .align string
 syn region decNumber            
-        \ matchgroup=MIPSConstraint 
+        \ matchgroup=MIPSDeclaration 
         \ start="\.align\s"  
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .text string
 syn region MIPSLabel            
-        \ matchgroup=MIPSConstraint 
+        \ matchgroup=MIPSDeclaration 
         \ start="\.text\s*"  
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .data string
 syn region MIPSLabel           
-        \ matchgroup=MIPSConstraint 
+        \ matchgroup=MIPSDeclaration 
         \ start="\.data\s*"  
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .word string
 syn region decNumber            
-        \ matchgroup=MIPSConstraint 
+        \ matchgroup=MIPSDeclaration 
         \ start="\.word\s*"  
         \ end="$"
-        \ contains=MIPSCommenthash
+        \ contains=MIPSComment
 
 " .asciiz strings
-syn region MIPSComment          
-        \ matchgroup=MIPSConstraint 
+syn region MIPSBase          
+        \ matchgroup=MIPSDeclaration 
         \ start="\.asciiz*\s" 
         \ end="$"                          
-        \ contains=MIPSOperator,MIPSCommenthash
+        \ contains=MIPSOperator,MIPSComment
 
 " .space string
 syn region decNumber
-        \ matchgroup=MIPSConstraint
+        \ matchgroup=MIPSDeclaration
         \ start="\.space\s*"
         \ end="\s"
         \ end="$"
-        \ contains=decNumber,MIPSCommenthash
+        \ contains=decNumber,MIPSComment
 
 
 " Registers 
@@ -123,7 +123,21 @@ syn match  MIPSOpcode           "andi*"
 syn match  MIPSOpcode           "slti*u*"
 syn match  MIPSOpcode           "move"
 syn match  MIPSOpcode           "addi*u*"
-syn match  MIPSOpcode           "mul"
+syn match  MIPSOpcode           "divu*"
+syn match  MIPSOpcode           "multu*"
+syn match  MIPSOpcode           "nor"
+syn match  MIPSOpcode           "ori*"
+
+
+"
+syn match  MIPSOpcode_ps        "mul\(ou*\)*"
+syn match  MIPSOpcode_ps        "negu*"
+syn match  MIPSOpcode_ps        "not"
+syn match  MIPSOpcode_ps        "remu*"
+syn match  MIPSOpcode_ps        "ro\(lr\)"
+syn match  MIPSOpcode_ps        "abs"
+syn match  MIPSOpcode_ps        "abs"
+syn match  MIPSOpcode_ps        "abs"
 
 
 " Branch opcodes, colored in purple
@@ -157,7 +171,7 @@ syn match  decNumber            "-*[0-9]"
 
 " Special items for comments
 syn keyword MIPSTodo		todo broken borked wtf janky 
-syn match   MIPSCommenthash	"#.*" contains=MIPSTodo,MIPSReg
+syn match   MIPSComment	"#.*"   contains=MIPSTodo,MIPSReg
 
 
 syn case match
@@ -169,8 +183,8 @@ if !exists("did_MIPS_syntax_inits")
   " The default methods for highlighting.  Can be overridden later
 
   HiLink MIPSLabel		Type            " Labels
-  HiLink MIPSComment		DarkGrey        " For strings
-  HiLink MIPSCommenthash	Comment         " For comments
+  HiLink MIPSBase		DarkGrey        " For strings
+  HiLink MIPSComment	        Comment         " For comments
   HiLink MIPSTodo		Todo            " For attention grabbing
 
   HiLink hexNumber		Number		" Constant
@@ -181,11 +195,13 @@ if !exists("did_MIPS_syntax_inits")
   HiLink MIPSReg		Identifier      " For registers
   HiLink MIPSOperator		Identifier      " For special characters
 
-  HiLink MIPSConstraint	        Ignore          " For Pre-Proc flags
+  HiLink MIPSDeclaration        Ignore          " For Pre-Proc flags
 
 " Opcodes: standard and branch opcodes are seperate
   HiLink MIPSOpcode		Keyword         " Standard
+  HiLink MIPSOPcode_ps          Keyword         " Standard Psuedoinstruction
   HiLink MIPSOpcode_br	        Macro           " Branch
+  HiLink MIPSOpcode_br_ps       Macro           " Branch Psuedoinstruction
 
   delcommand HiLink
 endif
