@@ -146,14 +146,13 @@ syn match  MIPSLabel            "^[a-z_?.][a-z0-9_?.$]*\s"
 
 
 " Various number formats
-syn match  decNumber            "-"
 syn match  hexNumber		"0x[0-9a-fA-F]\+\>"
 syn match  hexNumber		"\<[0-9][0-9a-fA-F]*H\>"
 syn match  octNumber		"@[0-7]\+\>"
 syn match  octNumber		"\<[0-7]\+[QO]\>"
 syn match  binNumber		"%[01]\+\>"
 syn match  binNumber		"\<[01]\+B\>"
-syn match  decNumber		"\<[0-9]\+D\=\>"
+syn match  decNumber            "-*[0-9]"
 
 
 " Special items for comments
