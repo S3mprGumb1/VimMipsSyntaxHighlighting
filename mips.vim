@@ -129,7 +129,7 @@ syn match  MIPSOpcode           "nor"
 syn match  MIPSOpcode           "ori*"
 
 
-"
+"Standard psuedoinstructions
 syn match  MIPSOpcode_ps        "mul\(ou*\)*"
 syn match  MIPSOpcode_ps        "negu*"
 syn match  MIPSOpcode_ps        "not"
